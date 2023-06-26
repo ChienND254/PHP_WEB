@@ -11,7 +11,7 @@
 
 <body>
     <?php 
-        if(isset($_SESSION['dangnhapthanhcong'])) { // kiểm tra xem đã đăng nhập có chạy đoạn code ở dưới
+        if(isset($_SESSION['dangnhapthanhcong']) || isset($_COOKIE["rememberme"])) { // kiểm tra xem đã đăng nhập có chạy đoạn code ở dưới
     ?>
     <div class="container-xxl position-relative bg-white d-flex p-0">
         <?php include("template/loading.php"); ?>
