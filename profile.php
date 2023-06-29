@@ -72,7 +72,7 @@ include("sessions.php");
         if (isset($_POST['xacnhanthaydoithongtin'])) {
             $email = mysqli_real_escape_string($connect, $_POST['email']); // gán email = email trong form
             $username = mysqli_real_escape_string($connect, $_POST['username']); // gán username = username trong form
-            $oldpassword = md5($_POST['oldpassword']);
+            $oldpassword = $_POST['oldpassword'];
             $newpassword = md5($_POST['newpassword']);
             $newpassword2 = md5($_POST['newpassword2']);
             $changeusername = false;
@@ -82,7 +82,7 @@ include("sessions.php");
                 $sqlcheckuser = "SELECT * FROM `users` WHERE `username` = '" . $username . "'"; // SQL lấy email và pw từ DB
                 $results = $connect->query($sqlcheckuser); // chạy câu lệnh SQL và lấy kết quả 
                 if ($results->num_rows > 0) { // đếm số dòng trùng vs thông tin câu lệnh trên. Nếu > 0 => thông tin tồn tại
-                    $_SESSION['khongthanhcong'] = "Tên tài khoản tồn tịa.";
+                    $_SESSION['khongthanhcong'] = "Tên tài khoản tồn tại.";
                     echo '<meta http-equiv="refresh" content="0;URL=profile.php">';
                 } else {
                     $connect->query("UPDATE `users` SET `username` = '" . $username . "' WHERE `username` = '" . $_SESSION['username'] . "'");
@@ -93,7 +93,7 @@ include("sessions.php");
                 $sqlcheckuser = "SELECT * FROM `users` WHERE `email` = '" . $email . "'"; // SQL lấy email và pw từ DB
                 $results = $connect->query($sqlcheckuser); // chạy câu lệnh SQL và lấy kết quả 
                 if ($results->num_rows > 0) { // đếm số dòng trùng vs thông tin câu lệnh trên. Nếu > 0 => thông tin tồn tại
-                    $_SESSION['khongthanhcong'] = "Email tồn tịa.";
+                    $_SESSION['khongthanhcong'] = "Email tồn tại.";
                     echo '<meta http-equiv="refresh" content="0;URL=profile.php">';
                 } else {
                     $connect->query("UPDATE `users` SET `email` = '" . $email . "' WHERE `username` = '" . $_SESSION['username'] . "'");
@@ -105,7 +105,7 @@ include("sessions.php");
                     $_SESSION['khongthanhcong'] = "Mật khẩu mới và  Xác nhận mật khẩu mới không chính xác.";
                     echo '<meta http-equiv="refresh" content="0;URL=profile.php">';
                 } else {
-                    $sqlcheckuser = "SELECT * FROM `users` WHERE `email` = '". $_SESSION['email'] ."' AND `password` = '". $oldpassword ."'";
+                    $sqlcheckuser = "SELECT * FROM `users` WHERE `email` = '". $_SESSION['email'] ."' AND `password` = '". md5($oldpassword) ."'";
                     $results = $connect->query($sqlcheckuser);
                     if ($results->num_rows > 0) {
                         $connect->query("UPDATE `users` SET `password` = '". $newpassword ."' WHERE `username` = '" . $_SESSION['username'] . "'");
