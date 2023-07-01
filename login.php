@@ -2,7 +2,7 @@
 include("connect.php");
 include("sessions.php");
 include("config.php")
-    ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -73,11 +73,12 @@ include("config.php")
             </div>
             <?php
         }
+        // login with account sign up
         if (isset($_POST['tienhanhdangnhap'])) { // kiểm tra nút đăng nhập đã được bấm
             $email = mysqli_real_escape_string($connect, $_POST['email']); // gán email = email trong form
             $password = md5($_POST['password']); // gán pw = pw trong form
             $rememberme = $_POST['rememberme'];
-            $sqlcheckuser = "SELECT * FROM `users` WHERE `email` = '" . $email . "' AND `password` = '" . $password . "' AND `adminlevel` > 0"; // SQL lấy email và pw từ DB
+            $sqlcheckuser = "SELECT * FROM `users` WHERE `email` = '" . $email . "' AND `password` = '" . $password . "'"; // SQL lấy email và pw từ DB
             $results = $connect->query($sqlcheckuser); // chạy câu lệnh SQL và lấy kết quả 
             if ($results->num_rows > 0) { // đếm số dòng trùng vs thông tin câu lệnh trên. Nếu > 0 => thông tin tồn tại
                 $user = $results->fetch_array(); // nạp thông tin vào mảng với từng key là thành cột trong bảng DB
@@ -93,9 +94,10 @@ include("config.php")
                 echo '<meta http-equiv="refresh" content="0;URL=login.php">';
             }
         }
+        // login with googel account
         if (isset($_GET['code'])) {
             $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-            if (isset($token['error'])) {
+            if (isset($token['error'])) { // check token 
                 echo '<meta http-equiv="refresh" content="0;URL=login.php">';
                 exit;
             }
@@ -110,10 +112,10 @@ include("config.php")
             $email = trim($user_info['email']);
 
             # Checking whether the email already exists in our database.
-            $check_email = $connect->query("SELECT `email` FROM `users` WHERE `email`= '". $email ."'");
+            $check_email = $connect->query("SELECT `email` FROM `users` WHERE `email`= '" . $email . "'");
             if ($check_email->num_rows == 0) {
                 # Inserting the new user into the database
-                $connect->query("INSERT INTO `users` (`username`, `email`) VALUES ('". $l_name ."','". $email ."')");
+                $connect->query("INSERT INTO `users` (`username`, `email`) VALUES ('" . $l_name . "','" . $email . "')");
                 $_SESSION['username'] = $l_name;
                 $_SESSION['email'] = $email;
                 $_SESSION['dangnhapthanhcong'] = "OK";
